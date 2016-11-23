@@ -25,4 +25,4 @@ or use
 
 Need Contribution:
 --------------------------------------------------------------------------------
-1. Enthusiastic, awesome developers are ready always welcome.
+1. Enthusiastic, awesome developers are always welcome.
