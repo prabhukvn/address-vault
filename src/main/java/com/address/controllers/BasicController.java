@@ -9,6 +9,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.address.controllers.routes.AddressRoutes;
+import com.address.controllers.routes.ProfileRoutes;
 
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.http.HttpServer;
@@ -45,6 +46,10 @@ public class BasicController extends AbstractVerticle {
 		// Add Address routes
 		AddressRoutes addressRoutes = new AddressRoutes(router);
 		addressRoutes.startRoutes();
+		
+		// profile routes
+		ProfileRoutes profileRoutes = new ProfileRoutes(router);
+		profileRoutes.startRoutes();
 		
 		
 		server.requestHandler(router::accept).listen(port, messae->{

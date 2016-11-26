@@ -5,7 +5,6 @@ package com.address.repositories;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.stereotype.Component;
 
 import com.address.base.BaseRepository;
 import com.address.entities.AddressEntity;
@@ -16,13 +15,19 @@ import com.address.entities.AddressEntity;
  */
 
 public class AddressRepository extends BaseRepository<AddressEntity> {
+	
+	public static int ADDRESS_DATABASE_INDEX = 0;
+	public AddressRepository() {
+		// TODO Auto-generated constructor stub
+		super(ADDRESS_DATABASE_INDEX);
+	}
 
 	public static final Logger logger = LogManager.getLogger(AddressRepository.class);
 	
 	public AddressEntity getAddress(String key) {
 		// TODO Auto-generated method stub
 		logger.debug("Get Address key {}.",key);
-		return new AddressEntity().toJson(super.get(key));
+		return new AddressEntity().fromJson(super.get(key));
 	}
 
 	public String getAddress(String email, String addressName) {

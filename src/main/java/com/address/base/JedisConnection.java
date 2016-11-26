@@ -52,8 +52,12 @@ public class JedisConnection implements BaseConnection<Jedis> {
 		if (jedisPool == null) {
 			logger.debug("Creating Redis connection pool with Host:{} and port:{}", hostName, port);
 			JedisPoolConfig poolConfig = new JedisPoolConfig();
+			
 			jedisPool = new JedisPool(poolConfig, hostName, port);
+			
 			jedisConnection = jedisPool.getResource();
+		
+			
 		} else {
 			jedisConnection = jedisPool.getResource();
 		}

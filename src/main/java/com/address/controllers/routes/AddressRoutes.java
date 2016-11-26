@@ -30,16 +30,12 @@ public class AddressRoutes extends BasicRoutes {
 
 	private static final String EMAIL_FIELD = "email";
 
-	private static final String CONTENT_TYPE = "content-type";
-
-	private static final String APPLICATION_JSON = "application/json";
-
+	
 	public static final Logger logger = LogManager.getLogger(AddressRoutes.class);
 
 	AddressManager addressManger = new AddressManager();
 
-	private Router router;
-
+	
 	/**
 	 * Default constructor
 	 */
@@ -125,7 +121,7 @@ public class AddressRoutes extends BasicRoutes {
 				if (Objects.isNull(address)) {
 					response.end("Address Not found for " + email + " and " + addressName);
 				} else {
-					response.end(address.getJson());
+					response.end(address.toJson());
 				}
 
 			});
@@ -144,7 +140,7 @@ public class AddressRoutes extends BasicRoutes {
 					logger.debug("Incoming Address Data:{}", bodyJson);
 					AddressEntity address = new AddressEntity();
 
-					address = address.toJson(bodyJson);
+					address = address.fromJson(bodyJson);
 					boolean status = this.addressManger.addAddress(address);
 					if (status) {
 						response.end("Address Added Suuccessfully.");

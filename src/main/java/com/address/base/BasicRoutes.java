@@ -9,6 +9,7 @@ import org.apache.logging.log4j.Logger;
 import io.vertx.core.MultiMap;
 import io.vertx.core.buffer.Buffer;
 import io.vertx.core.http.HttpServerRequest;
+import io.vertx.ext.web.Router;
 
 /**
  * @author prabhu kvn
@@ -17,7 +18,19 @@ import io.vertx.core.http.HttpServerRequest;
 public class BasicRoutes {
 	
 	public final Logger logger = LogManager.getLogger(this.getClass());
+	
+	public static final String CONTENT_TYPE = "content-type";
 
+	public static final String APPLICATION_JSON = "application/json";
+
+	public Router router;
+
+	/**
+	 * Start the routes of address
+	 */
+	public void startRoutes() {
+		
+	}
 	/**
 	 * Log the Request Object
 	 * @param request

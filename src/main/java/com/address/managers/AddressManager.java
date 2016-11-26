@@ -34,7 +34,7 @@ public class AddressManager {
 
 	public boolean addAddress(AddressEntity address) {
 
-		logger.debug("Incoming Address Entity:{}",address.getJson());
+		logger.debug("Incoming Address Entity:{}",address.toJson());
 		boolean status = false;
 		if(address !=null && address instanceof AddressEntity){
 			AddressEntity addressEntity = (	AddressEntity)address;
@@ -73,7 +73,7 @@ public class AddressManager {
 				AddressData addressData =  addressEntity.new AddressData().toJson(data);
 				addressEntity.getAddresses().add(addressData);
 			}
-			return addressEntity.getJson();
+			return addressEntity.toJson();
 		}
 		
 	}
@@ -83,7 +83,7 @@ public class AddressManager {
 		if(Strings.isNotEmpty(email) && Strings.isNotEmpty(addressName)){
 			String addressJson = this.repository.getAddress(email, addressName);
 			AddressEntity address = new AddressEntity();
-			return address.toJson(addressJson);
+			return address.fromJson(addressJson);
 		}
 		return null;
 	}

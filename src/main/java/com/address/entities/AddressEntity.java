@@ -13,7 +13,7 @@ import com.google.gson.Gson;
  * @author prabhu kvn
  *
  */
-public class AddressEntity implements BaseEntity{
+public class AddressEntity implements BaseEntity<AddressEntity>{
 	
 	/**
 	 * Instance Variables
@@ -50,12 +50,12 @@ public class AddressEntity implements BaseEntity{
 	 * Return the JSON Object
 	 */
 	@Override
-	public String getJson() {
+	public String toJson() {
 		// TODO Auto-generated method stub
 		return new Gson().toJson(this);
 	}
 	
-	public AddressEntity toJson(String value){
+	public AddressEntity fromJson(String value){
 		
 		return new Gson().fromJson(value, getClass());
 	}
