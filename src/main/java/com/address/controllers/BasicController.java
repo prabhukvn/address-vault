@@ -36,17 +36,19 @@ public class BasicController extends AbstractVerticle {
 	@Override
 	public void start() throws Exception {
 		
-		logger.debug("Initializing the server on 8999");
+		
 		HttpServer server = vertx.createHttpServer();
 		Router router = Router.router(vertx);
-		
+	
+		int port = config().getInteger("port");
+		logger.debug("Initializing the server on {}",port);
 		// Add Address routes
 		AddressRoutes addressRoutes = new AddressRoutes(router);
 		addressRoutes.startRoutes();
 		
 		
-		server.requestHandler(router::accept).listen(8999, messae->{
-			logger.debug("Server started on 8999...");
+		server.requestHandler(router::accept).listen(port, messae->{
+			logger.debug("Server started on {}...",port);
 			List<Route> listOfRoutes = router.getRoutes(); 
 			logger.debug("##############Total Routes in the system ###############");
 			for(Route route: listOfRoutes){

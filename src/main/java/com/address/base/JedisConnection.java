@@ -7,6 +7,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisPool;
+import redis.clients.jedis.JedisPoolConfig;
 
 /**
  * @author prabhu kvn
@@ -21,6 +23,7 @@ public class JedisConnection implements BaseConnection<Jedis> {
 	private static Jedis jedisConnection = null;
 
 	private static String hostName = "localhost";
+	private static JedisPool jedisPool = null;
 	private static int port = 6379;
 
 	/**
@@ -38,12 +41,24 @@ public class JedisConnection implements BaseConnection<Jedis> {
 
 	public static Jedis getConnection() {
 
-		if (jedisConnection == null) {
-			logger.debug("Creating Redis connection with Host:{} and port:{}", hostName, port);
-			jedisConnection = new Jedis(hostName, port);
-		}
-		return jedisConnection;
+		return getConnectionFromPool(hostName, port);
 
+	}
+
+	/**
+	 * 
+	 */
+	private static Jedis getConnectionFromPool(String hostName, int port) {
+		if (jedisPool == null) {
+			logger.debug("Creating Redis connection pool with Host:{} and port:{}", hostName, port);
+			JedisPoolConfig poolConfig = new JedisPoolConfig();
+			jedisPool = new JedisPool(poolConfig, hostName, port);
+			jedisConnection = jedisPool.getResource();
+		} else {
+			jedisConnection = jedisPool.getResource();
+		}
+
+		return jedisConnection;
 	}
 
 	/**
@@ -56,11 +71,7 @@ public class JedisConnection implements BaseConnection<Jedis> {
 
 	public static Jedis getConnection(String hostName, int port) {
 
-		if (jedisConnection == null) {
-			logger.debug("Creating Redis connection with Host:{} and port:{}", hostName, port);
-			jedisConnection = new Jedis(hostName, port);
-		}
-		return jedisConnection;
+		return getConnectionFromPool(hostName, port);
 	}
 
 	/**

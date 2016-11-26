@@ -26,6 +26,7 @@ dependencies {
   	compile group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.7'
   	compile 'io.vertx:vertx-web:3.3.3'
   	compile 'io.vertx:vertx-hazelcast:3.3.3'
+  	compile 'org.apache.commons:commons-pool2:2.0'
   	// https://mvnrepository.com/artifact/redis.clients/jedis
 	compile group: 'redis.clients', name: 'jedis', version: '2.9.0'
 	// https://mvnrepository.com/artifact/com.google.code.gson/gson

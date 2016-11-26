@@ -19,7 +19,7 @@ public class BaseRepository<T extends BaseEntity> {
 
 	public static final Logger logger = LogManager.getLogger();
 
-	Jedis jedis = JedisConnection.getConnection();
+	
 
 	/**
 	 * 
@@ -38,26 +38,52 @@ public class BaseRepository<T extends BaseEntity> {
 	 */
 	public String setAsString(T entity) {
 
-		return jedis.set(entity.getKey(), entity.getJson());
-
-	}
-
-	public String get(String key) {
-		String value = jedis.get(key);
-		logger.debug("Value {}", value);
+		String value = null;
+		try(Jedis jedis = JedisConnection.getConnection()){
+			value= jedis.set(entity.getKey(), entity.getJson());
+		}catch (Exception e) {
+			logger.error("Error in Redis Connectivity.", e);
+		}
 		return value;
 
 	}
 
+	public String get(String key) {
+		String value = null;
+		try(Jedis jedis = JedisConnection.getConnection()){
+			value= jedis.get(key);
+			logger.debug("Value {}", value);
+		}catch (Exception e) {
+			logger.error("Error in Redis Connectivity.", e);
+		}
+		return value;
+		
+
+	}
+
 	public Long delString(String key) {
-		logger.debug("Deleting key:{}", key);
-		return jedis.del(key);
+		Long value = null;
+		try(Jedis jedis = JedisConnection.getConnection()){
+			value= jedis.del(key);
+			logger.debug("Deleting key:{}", key);
+		}catch (Exception e) {
+			logger.error("Error in Redis Connectivity.", e);
+		}
+		return value;
+		
 	}
 
 	public Long delStrings(String... keys) {
-		logger.debug("Deleting keys:{}", Arrays.asList(keys));
-
-		return jedis.del(keys);
+		
+		
+		Long value = null;
+		try(Jedis jedis = JedisConnection.getConnection()){
+			value= jedis.del(keys);
+			logger.debug("Deleting keys:{}", Arrays.asList(keys));
+		}catch (Exception e) {
+			logger.error("Error in Redis Connectivity.", e);
+		}
+		return value;
 	}
 
 	/**
@@ -72,9 +98,15 @@ public class BaseRepository<T extends BaseEntity> {
 	 */
 
 	public void setInHset(String key, String field, String data) {
-
-		logger.debug("Incoming Request:{} field {} and data {}",key,field,data);
-		this.jedis.hset(key, field, data);
+		
+		Long value = null;
+		try(Jedis jedis = JedisConnection.getConnection()){
+			value= jedis.hset(key, field, data);
+			logger.debug("Incoming Request:{} field {} and data {}",key,field,data);
+		}catch (Exception e) {
+			logger.error("Error in Redis Connectivity.", e);
+		}
+		logger.debug("Number of records deleted {}", value);
 
 	}
 	/**
@@ -83,8 +115,18 @@ public class BaseRepository<T extends BaseEntity> {
 	 * @return
 	 */
 	public Map<String, String> getAllFromHSet(String key){
-		logger.debug("Incoming Key {}",key);
-		return this.jedis.hgetAll(key);
+	
+		
+		Map<String, String> value = null;
+		try(Jedis jedis = JedisConnection.getConnection()){
+			value= jedis.hgetAll(key);
+			logger.debug("Incoming Key {}",key);
+		}catch (Exception e) {
+			logger.error("Error in Redis Connectivity.", e);
+		}
+		logger.debug("Number of records deleted {}", value);
+		
+		return value;
 	}
 	/**
 	 * 
@@ -92,25 +134,55 @@ public class BaseRepository<T extends BaseEntity> {
 	 * @param field
 	 */
 	public String getFromHSet(String key, String field){
-		String value = this.jedis.hget(key, field);
-		logger.debug("From Hset:{}",value);
+		
+		String value = null;
+		try(Jedis jedis = JedisConnection.getConnection()){
+			value= jedis.hget(key, field);
+			logger.debug("From Hset:{}",value);
+		}catch (Exception e) {
+			logger.error("Error in Redis Connectivity.", e);
+		}
 		return value;
+		
 	}
 	
 	public Long delFromHSet(String key) {
-		// TODO Auto-generated method stub
-		return this.jedis.del(key);
+
+		
+		Long value = null;
+		try(Jedis jedis = JedisConnection.getConnection()){
+			value= jedis.del(key);
+			logger.debug("Deleting keys:{}",key);
+		}catch (Exception e) {
+			logger.error("Error in Redis Connectivity.", e);
+		}
+		return value;
+		
 	}
 
 	public Long delFromHSet(String key, String field) {
-		// TODO Auto-generated method stub
-		return this.jedis.hdel(key,field);
+
+		Long value = null;
+		try(Jedis jedis = JedisConnection.getConnection()){
+			value= jedis.hdel(key,field);
+			logger.debug("Deleting keys:{} and field {}",key, field);
+		}catch (Exception e) {
+			logger.error("Error in Redis Connectivity.", e);
+		}
+		return value;
 		
 	}
 
 	public Long setInHSet(String key, String field, String value) {
-		// TODO Auto-generated method stub
-		return this.jedis.hset(key, field, value);
+
+		Long result = null;
+		try(Jedis jedis = JedisConnection.getConnection()){
+			result= jedis.hset(key, field, value);
+			logger.debug("Deleting keys:{} and field {} value {}",key, field, value);
+		}catch (Exception e) {
+			logger.error("Error in Redis Connectivity.", e);
+		}
+		return result;
 	}
 
 

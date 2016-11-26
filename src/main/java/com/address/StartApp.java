@@ -8,8 +8,10 @@ import org.apache.logging.log4j.Logger;
 
 import com.address.controllers.BasicController;
 
+import io.vertx.core.DeploymentOptions;
 import io.vertx.core.Vertx;
 import io.vertx.core.VertxOptions;
+import io.vertx.core.json.JsonObject;
 
 /**
  * @author prabhu kvn
@@ -40,7 +42,16 @@ public class StartApp {
 	
 		Vertx.clusteredVertx(options, resultHandler->{
 			try {
-				Vertx.factory.vertx().deployVerticle(BasicController.class.getName());
+				
+				int port = 8999;
+				if(args!=null && args.length>0){
+					port = Integer.parseInt(args[0]);
+				}
+				JsonObject config = Vertx.factory.vertx().getOrCreateContext().config();
+				config.put("port", port);
+				DeploymentOptions dOptions = new DeploymentOptions();
+				dOptions.setConfig(config);
+				Vertx.factory.vertx().deployVerticle(BasicController.class.getName(),dOptions);
 			
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
