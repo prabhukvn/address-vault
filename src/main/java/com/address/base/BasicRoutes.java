@@ -7,6 +7,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import io.vertx.core.MultiMap;
+import io.vertx.core.Vertx;
 import io.vertx.core.buffer.Buffer;
 import io.vertx.core.http.HttpServerRequest;
 import io.vertx.ext.web.Router;
@@ -24,6 +25,8 @@ public class BasicRoutes {
 	public static final String APPLICATION_JSON = "application/json";
 
 	public Router router;
+	
+	public Vertx vertx;
 
 	/**
 	 * Start the routes of address

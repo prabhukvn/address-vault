@@ -14,6 +14,7 @@ import com.address.entities.AddressEntity;
 import com.address.entities.AddressEntity.AddressData;
 import com.address.managers.AddressManager;
 
+import io.vertx.core.Vertx;
 import io.vertx.core.buffer.Buffer;
 import io.vertx.core.http.HttpMethod;
 import io.vertx.core.http.HttpServerRequest;
@@ -43,8 +44,9 @@ public class AddressRoutes extends BasicRoutes {
 
 	}
 
-	public AddressRoutes(Router router) {
+	public AddressRoutes(Router router, Vertx vertx) {
 		this.router = router;
+		this.vertx=vertx;
 	}
 
 	/**
@@ -57,7 +59,8 @@ public class AddressRoutes extends BasicRoutes {
 			/**
 			 * Get All addresses for a given profile
 			 */
-			router.route("/getAllAddresses/:email").method(HttpMethod.GET).handler(requestContext -> {
+			
+			router.route("/address/getall/:email").method(HttpMethod.GET).handler(requestContext -> {
 				HttpServerResponse response = requestContext.response();
 				response.putHeader(CONTENT_TYPE, APPLICATION_JSON);
 				HttpServerRequest request = requestContext.request();
@@ -79,7 +82,7 @@ public class AddressRoutes extends BasicRoutes {
 			/**
 			 * Add an address to existing profile
 			 */
-			router.route("/addAddress/:email").method(HttpMethod.POST).handler(requestContext -> {
+			router.route("/address/add/:email").method(HttpMethod.POST).handler(requestContext -> {
 				HttpServerResponse response = requestContext.response();
 				HttpServerRequest request = requestContext.request();
 				response.putHeader(CONTENT_TYPE, APPLICATION_JSON);
@@ -97,7 +100,7 @@ public class AddressRoutes extends BasicRoutes {
 					data = data.toJson(bodyJson);
 					address.getAddresses().add(data);
 
-					if (addressManger.addAddress(address)) {
+					if (addressManger.addAddress(address,vertx)) {
 
 						response.end("Address added to Account:" + email);
 					} else {
@@ -110,7 +113,7 @@ public class AddressRoutes extends BasicRoutes {
 			/**
 			 * Get An Address using address name from a profile
 			 */
-			router.route("/getAddress/:email/:addressName").handler(requestContext -> {
+			router.route("/address/get/:email/:addressName").handler(requestContext -> {
 				HttpServerResponse response = requestContext.response();
 				HttpServerRequest request = requestContext.request();
 				response.putHeader(CONTENT_TYPE, APPLICATION_JSON);
@@ -129,7 +132,7 @@ public class AddressRoutes extends BasicRoutes {
 			/**
 			 * Add All addresses to a profile
 			 */
-			router.route("/addAddress").method(HttpMethod.POST).handler(requestHandler -> {
+			router.route("/address/add").method(HttpMethod.POST).handler(requestHandler -> {
 				HttpServerRequest request = requestHandler.request();
 				HttpServerResponse response = requestHandler.response();
 				response.putHeader(CONTENT_TYPE, APPLICATION_JSON);
@@ -141,7 +144,7 @@ public class AddressRoutes extends BasicRoutes {
 					AddressEntity address = new AddressEntity();
 
 					address = address.fromJson(bodyJson);
-					boolean status = this.addressManger.addAddress(address);
+					boolean status = this.addressManger.addAddress(address,vertx);
 					if (status) {
 						response.end("Address Added Suuccessfully.");
 					} else {
@@ -153,7 +156,7 @@ public class AddressRoutes extends BasicRoutes {
 			/**
 			 * Delete addresses for a profile
 			 */
-			router.route("/deleteAllAddresses/:email").method(HttpMethod.DELETE).handler(requestHandler -> {
+			router.route("/address/deleteall/:email").method(HttpMethod.DELETE).handler(requestHandler -> {
 				HttpServerRequest request = requestHandler.request();
 				HttpServerResponse response = requestHandler.response();
 				response.putHeader(CONTENT_TYPE, APPLICATION_JSON);
@@ -170,7 +173,7 @@ public class AddressRoutes extends BasicRoutes {
 			/**
 			 * Delete a particular address from email
 			 */
-			router.route("/deleteAddtess/:email/:addressName").method(HttpMethod.DELETE)
+			router.route("/address/delete/:email/:addressName").method(HttpMethod.DELETE)
 					.handler(requestHandler -> {
 
 						HttpServerRequest request = requestHandler.request();

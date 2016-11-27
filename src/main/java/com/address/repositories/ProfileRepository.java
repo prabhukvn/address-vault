@@ -17,10 +17,12 @@ public class ProfileRepository extends BaseRepository<ProfileEntity>{
 
 	Logger logger = LogManager.getLogger(ProfileRepository.class);
 	public static int ADDRESS_DATABASE_INDEX = 1;
+	
 	public ProfileRepository() {
 		// TODO Auto-generated constructor stub
 		super(ADDRESS_DATABASE_INDEX);
 	}
+	
 	public String addProfile(ProfileEntity profileEntity) {
 
 	

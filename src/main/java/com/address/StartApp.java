@@ -32,27 +32,25 @@ public class StartApp {
 		logger.info("#########Starting Main Application...#############");
 		VertxOptions options = new VertxOptions();
 		options.setClustered(true);
-		
-		logger.debug("Event Pool Size: {}",options.getEventLoopPoolSize());
-		logger.debug("Worker Thread Pool Size:{}",options.getWorkerPoolSize());
-		/*Vertx vertx = Vertx.vertx(options);
-		vertx.deployVerticle(BasicController.class.getName());
-	*/
-		
+
+		logger.debug("Event Pool Size: {}", options.getEventLoopPoolSize());
+		logger.debug("Worker Thread Pool Size:{}", options.getWorkerPoolSize());
 	
-		Vertx.clusteredVertx(options, resultHandler->{
+
+		Vertx.clusteredVertx(options, resultHandler -> {
 			try {
-				
+
 				int port = 8999;
-				if(args!=null && args.length>0){
+				if (args != null && args.length > 0) {
 					port = Integer.parseInt(args[0]);
 				}
 				JsonObject config = Vertx.factory.vertx().getOrCreateContext().config();
 				config.put("port", port);
 				DeploymentOptions dOptions = new DeploymentOptions();
+				dOptions.setInstances(1);
 				dOptions.setConfig(config);
-				Vertx.factory.vertx().deployVerticle(BasicController.class.getName(),dOptions);
-			
+				Vertx.factory.vertx().deployVerticle(BasicController.class.getName(), dOptions);
+
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

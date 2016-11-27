@@ -15,6 +15,8 @@ import com.address.entities.AddressEntity;
 import com.address.entities.AddressEntity.AddressData;
 import com.address.repositories.AddressRepository;
 
+import io.vertx.core.Vertx;
+
 /**
  * @author prabhu kvn
  *
@@ -32,7 +34,7 @@ public class AddressManager {
 		// TODO Auto-generated constructor stub
 	}
 
-	public boolean addAddress(AddressEntity address) {
+	public boolean addAddress(AddressEntity address, Vertx vertx) {
 
 		logger.debug("Incoming Address Entity:{}",address.toJson());
 		boolean status = false;
@@ -48,6 +50,8 @@ public class AddressManager {
 					records+=record;
 				}
 				logger.debug("Number of records updated {}",records);
+				// trigger the email
+				vertx.eventBus().send("email",addressEntity.toJson() );
 				status= true;
 			}else {
 				logger.debug("Address not updated for {}.",key);

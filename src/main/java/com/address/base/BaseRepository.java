@@ -15,7 +15,7 @@ import redis.clients.jedis.Jedis;
  * @author prabhu kvn
  *
  */
-public class BaseRepository<T extends BaseEntity> {
+public class BaseRepository<T extends BaseEntity<T>> {
 
 	public static final Logger logger = LogManager.getLogger();
 	
