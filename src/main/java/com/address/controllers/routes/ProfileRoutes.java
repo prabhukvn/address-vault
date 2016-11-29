@@ -55,26 +55,137 @@ public class ProfileRoutes extends BasicRoutes {
 				HttpServerResponse response = requestHandler.response();
 				response.putHeader(CONTENT_TYPE, APPLICATION_JSON);
 				logRequest(request);
-				request.bodyHandler(bodyHandler->{
+				request.bodyHandler(bodyHandler -> {
 
 					Buffer jsonInput = bodyHandler.copy();
 					logBody(jsonInput);
 					String inputString = jsonInput.toString();
 					ProfileEntity profileEntity = new ProfileEntity();
 					profileEntity = profileEntity.fromJson(inputString);
-					String result= profileManager.addProfile(profileEntity);
-					if(Strings.isNotEmpty(result)){
-						response.end("Profile Added "+result);
-					}else {
-						response.end("Not Able to add profile "+inputString);
+					String result = null;
+					if(!profileManager.isEmailExists(profileEntity)){
+					result = profileManager.addProfile(profileEntity);
 					}
-					
-					
-					
+					if (Strings.isNotEmpty(result)) {
+						response.end("Profile Added " + result);
+					} else {
+						response.end("Not Able to add profile " + inputString);
+					}
+
 				});
 
 			});
 
+			// profile delete
+			router.route("/profile/delete").method(HttpMethod.POST).handler(requestHandler -> {
+
+				HttpServerRequest request = requestHandler.request();
+				HttpServerResponse response = requestHandler.response();
+				response.putHeader(CONTENT_TYPE, APPLICATION_JSON);
+				logRequest(request);
+				request.bodyHandler(bodyHandler -> {
+
+					Buffer jsonInput = bodyHandler.copy();
+					logBody(jsonInput);
+					String inputString = jsonInput.toString();
+					ProfileEntity profileEntity = new ProfileEntity();
+					profileEntity = profileEntity.fromJson(inputString);
+					Long result = Long.valueOf(0);
+					if(profileManager.isProfileExists(profileEntity)){
+					 result = profileManager.deleteProfile(profileEntity);
+					}
+					if (result > 0) {
+						response.end("Profile Deleted. " + result);
+					} else {
+						response.end("Not Able to Delete Profile " + inputString);
+					}
+
+				});
+
+			});
+
+			// profile update
+						router.route("/profile/update").method(HttpMethod.POST).handler(requestHandler -> {
+
+							HttpServerRequest request = requestHandler.request();
+							HttpServerResponse response = requestHandler.response();
+							response.putHeader(CONTENT_TYPE, APPLICATION_JSON);
+							logRequest(request);
+							request.bodyHandler(bodyHandler -> {
+
+								Buffer jsonInput = bodyHandler.copy();
+								logBody(jsonInput);
+								String inputString = jsonInput.toString();
+								ProfileEntity profileEntity = new ProfileEntity();
+								profileEntity = profileEntity.fromJson(inputString);
+								String result = null;
+								if(profileManager.isProfileExists(profileEntity)){
+								 result = profileManager.updateProfile(profileEntity);
+								}
+								if (Strings.isNotBlank(result)) {
+									response.end("Profile updated. " + result);
+								} else {
+									response.end("Not Able to update Profile " + inputString);
+								}
+
+							});
+
+						});
+
+			// login
+			// profile login
+			router.route("/profile/login").method(HttpMethod.POST).handler(requestHandler -> {
+
+				HttpServerRequest request = requestHandler.request();
+				HttpServerResponse response = requestHandler.response();
+				response.putHeader(CONTENT_TYPE, APPLICATION_JSON);
+				logRequest(request);
+				request.bodyHandler(bodyHandler -> {
+
+					Buffer jsonInput = bodyHandler.copy();
+					logBody(jsonInput);
+					String inputString = jsonInput.toString();
+					ProfileEntity profileEntity = new ProfileEntity();
+					profileEntity = profileEntity.fromJson(inputString);
+					
+					int result = profileManager.loginProfile(profileEntity);
+					if (result > 0) {
+						response.end(Boolean.TRUE.toString());
+					} else {
+						response.end(Boolean.FALSE.toString());
+					}
+
+				});
+
+			});
+			
+			// get the complete profile
+			router.route("/profile/fullprofile").method(HttpMethod.POST).handler(requestHandler -> {
+
+				HttpServerRequest request = requestHandler.request();
+				HttpServerResponse response = requestHandler.response();
+				response.putHeader(CONTENT_TYPE, APPLICATION_JSON);
+				logRequest(request);
+				request.bodyHandler(bodyHandler -> {
+
+					Buffer jsonInput = bodyHandler.copy();
+					logBody(jsonInput);
+					String inputString = jsonInput.toString();
+					ProfileEntity profileEntity = new ProfileEntity();
+					profileEntity = profileEntity.fromJson(inputString);
+					String result = null;
+					if(profileManager.isProfileExists(profileEntity)){
+					 result = profileManager.fullProfile(profileEntity);
+					}
+					if (Strings.isNotBlank(result)) {
+						response.end(result);
+					} else {
+						response.end("Not able to find profile."+profileEntity.toJson());
+					}
+
+				});
+
+			});
 		}
 	}
 

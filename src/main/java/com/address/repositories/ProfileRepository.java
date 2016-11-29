@@ -31,5 +31,17 @@ public class ProfileRepository extends BaseRepository<ProfileEntity>{
 		
 		
 	}
+
+	public Long deleteProfile(ProfileEntity profileEntity) {
+		// TODO Auto-generated method stub
+		logger.debug("Deleting the pforile: {}",profileEntity.toJson());
+		return this.delString(profileEntity.getKey());
+		
+	}
+
+	public String updateProfile(ProfileEntity profileEntity) {
+		// TODO Auto-generated method stub
+		return this.setAsString(profileEntity);
+	}
 	
 }

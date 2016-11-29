@@ -61,6 +61,7 @@ public class BaseRepository<T extends BaseEntity<T>> {
 	 */
 	private Jedis getConnection() {
 		Jedis jedis = JedisConnection.getConnection();
+		logger.debug("Connecting to database index {}",DATABASE_INDEX);
 		jedis.select(DATABASE_INDEX);
 		return jedis;
 	}
