@@ -69,4 +69,5 @@ public class ProfileEntity implements BaseEntity<ProfileEntity>, Comparable<Prof
 		return 0;
 	}
 
+	
 }

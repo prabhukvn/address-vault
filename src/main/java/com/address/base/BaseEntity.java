@@ -23,9 +23,10 @@ public interface BaseEntity<T> {
 		return new Gson().toJson(this);
 	}
 	
+	@SuppressWarnings("unchecked")
 	public default T fromJson(String value){
 		
-		return new Gson().fromJson(value, getClass());
+		return (T)new Gson().fromJson(value, this.getClass());
 	}
 
 }

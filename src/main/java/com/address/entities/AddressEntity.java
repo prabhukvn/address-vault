@@ -46,19 +46,7 @@ public class AddressEntity implements BaseEntity<AddressEntity>{
 		return email;
 	}
 	
-	/**
-	 * Return the JSON Object
-	 */
-	@Override
-	public String toJson() {
-		// TODO Auto-generated method stub
-		return new Gson().toJson(this);
-	}
 	
-	public AddressEntity fromJson(String value){
-		
-		return new Gson().fromJson(value, getClass());
-	}
 	
 	
 	

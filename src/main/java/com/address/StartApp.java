@@ -49,11 +49,11 @@ public class StartApp {
 				DeploymentOptions dOptions = new DeploymentOptions();
 				dOptions.setInstances(1);
 				dOptions.setConfig(config);
+				dOptions.setHa(true);
 				Vertx.factory.vertx().deployVerticle(BasicController.class.getName(), dOptions);
 
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				logger.error("Starting problem...",e);
 			}
 		});
 

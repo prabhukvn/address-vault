@@ -11,6 +11,7 @@ import org.apache.logging.log4j.Logger;
 import com.address.base.BaseVerticle;
 import com.address.controllers.routes.AddressRoutes;
 import com.address.controllers.routes.ProfileRoutes;
+import com.address.controllers.routes.TestScenarios;
 import com.address.core.verticles.EmailWorkerVerticle;
 
 import io.vertx.core.AsyncResult;
@@ -18,6 +19,7 @@ import io.vertx.core.Context;
 import io.vertx.core.DeploymentOptions;
 import io.vertx.core.Handler;
 import io.vertx.core.Vertx;
+import io.vertx.core.eventbus.EventBus;
 import io.vertx.core.http.HttpServer;
 import io.vertx.core.http.HttpServerOptions;
 import io.vertx.ext.web.Route;
@@ -75,6 +77,8 @@ public class BasicController extends BaseVerticle {
 
 		HttpServerOptions sOptions = new HttpServerOptions();
 		sOptions.setLogActivity(true);
+		//sOptions.setSsl(true);
+		
 		
 		HttpServer server = vertx.createHttpServer(sOptions);
 		Router router = Router.router(vertx);
@@ -88,6 +92,10 @@ public class BasicController extends BaseVerticle {
 		// profile routes
 		ProfileRoutes profileRoutes = new ProfileRoutes(router);
 		profileRoutes.startRoutes();
+		
+		// test scenarios
+		TestScenarios testScenarios = new TestScenarios(router, vertx);
+		testScenarios.startRoutes();
 
 		server.requestHandler(router::accept).listen(port, messae -> {
 			logger.debug("Server started on {}...", port);
@@ -96,6 +104,15 @@ public class BasicController extends BaseVerticle {
 			for (Route route : listOfRoutes) {
 				logger.debug(route.getPath());
 			}
+			logger.debug("Event bus details ....");
+			EventBus eventBus= vertx.eventBus();
+			// event bus interceptor
+			eventBus.addInterceptor(interceptor->{
+				logger.debug("Intercepting Event Bus &&&&&&&&&&&&&&&&&&&");
+				logger.debug("Message:"+interceptor.message());
+			
+			});
+		vertx.isMetricsEnabled();
 		});
 
 	}
