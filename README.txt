@@ -15,6 +15,11 @@ Software Configuration
 5. using jedis 2.9 // redis client
 6. Redis
 
+pre-requisites
+1. install JDK1.8
+2. install Gradle
+3. install redis and update the conection details in JedisConnection.java
+
 Running the application:
 --------------------------------------------------------------------------------
 run StartApp.java in standalone mode.
