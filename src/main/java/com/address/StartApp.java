@@ -13,20 +13,28 @@ import io.vertx.core.Vertx;
 import io.vertx.core.VertxOptions;
 import io.vertx.core.json.JsonObject;
 
+// TODO: Auto-generated Javadoc
 /**
- * @author prabhu kvn
+ * The Class StartApp.
  *
+ * @author prabhu kvn
  */
 public class StartApp {
 
+	/** The Constant logger. */
 	public static final Logger logger = LogManager.getLogger(StartApp.class);
 
 	/**
-	 * Empty Constructor
+	 * Empty Constructor.
 	 */
 	public StartApp() {
 	}
 
+	/**
+	 * The main method.
+	 *
+	 * @param args the arguments
+	 */
 	public static void main(String[] args) {
 
 		logger.info("#########Starting Main Application...#############");

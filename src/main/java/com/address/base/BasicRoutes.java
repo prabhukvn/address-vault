@@ -12,31 +12,40 @@ import io.vertx.core.buffer.Buffer;
 import io.vertx.core.http.HttpServerRequest;
 import io.vertx.ext.web.Router;
 
+// TODO: Auto-generated Javadoc
 /**
- * @author prabhu kvn
+ * The Class BasicRoutes.
  *
+ * @author prabhu kvn
  */
 public class BasicRoutes {
 	
+	/** The logger. */
 	public final Logger logger = LogManager.getLogger(this.getClass());
 	
+	/** The Constant CONTENT_TYPE. */
 	public static final String CONTENT_TYPE = "content-type";
 
+	/** The Constant APPLICATION_JSON. */
 	public static final String APPLICATION_JSON = "application/json";
 
+	/** The router. */
 	public Router router;
 	
+	/** The vertx. */
 	public Vertx vertx;
 
 	/**
-	 * Start the routes of address
+	 * Start the routes of address.
 	 */
 	public void startRoutes() {
 		
 	}
+	
 	/**
-	 * Log the Request Object
-	 * @param request
+	 * Log the Request Object.
+	 *
+	 * @param request the request
 	 */
 	public void logRequest(HttpServerRequest request) {
 
@@ -73,6 +82,11 @@ public class BasicRoutes {
 		
 	}
 
+	/**
+	 * Log body.
+	 *
+	 * @param incomingJson the incoming json
+	 */
 	public void logBody(Buffer incomingJson) {
 		// TODO Auto-generated method stub
 		logger.debug("Request Body: \n {}",incomingJson);

@@ -30,7 +30,6 @@ public class JedisConnection implements BaseConnection<Jedis> {
 	 * 
 	 */
 	private JedisConnection() {
-		// TODO Auto-generated constructor stub
 	}
 
 	/**
@@ -46,18 +45,23 @@ public class JedisConnection implements BaseConnection<Jedis> {
 	}
 
 	/**
-	 * 
+	 * Gets the connection from pool.
+	 *
+	 * @param hostName
+	 *            the host name
+	 * @param port
+	 *            the port
+	 * @return the connection from pool
 	 */
 	private static Jedis getConnectionFromPool(String hostName, int port) {
 		if (jedisPool == null) {
 			logger.debug("Creating Redis connection pool with Host:{} and port:{}", hostName, port);
 			JedisPoolConfig poolConfig = new JedisPoolConfig();
-			
+
 			jedisPool = new JedisPool(poolConfig, hostName, port);
-			
+
 			jedisConnection = jedisPool.getResource();
-		
-			
+
 		} else {
 			jedisConnection = jedisPool.getResource();
 		}
