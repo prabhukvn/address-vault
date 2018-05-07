@@ -78,7 +78,7 @@ public class BasicController extends BaseVerticle {
 		HttpServerOptions sOptions = new HttpServerOptions();
 		sOptions.setLogActivity(true);
 		//sOptions.setSsl(true);
-		
+		sOptions.addEnabledSecureTransportProtocol("https");
 		
 		HttpServer server = vertx.createHttpServer(sOptions);
 		Router router = Router.router(vertx);

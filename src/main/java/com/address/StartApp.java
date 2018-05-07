@@ -40,6 +40,7 @@ public class StartApp {
 		logger.info("#########Starting Main Application...#############");
 		VertxOptions options = new VertxOptions();
 		options.setClustered(true);
+		
 
 		logger.debug("Event Pool Size: {}", options.getEventLoopPoolSize());
 		logger.debug("Worker Thread Pool Size:{}", options.getWorkerPoolSize());
@@ -55,7 +56,7 @@ public class StartApp {
 				JsonObject config = Vertx.factory.vertx().getOrCreateContext().config();
 				config.put("port", port);
 				DeploymentOptions dOptions = new DeploymentOptions();
-				dOptions.setInstances(1);
+				dOptions.setInstances(4);
 				dOptions.setConfig(config);
 				dOptions.setHa(true);
 				Vertx.factory.vertx().deployVerticle(BasicController.class.getName(), dOptions);
