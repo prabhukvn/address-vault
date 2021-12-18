@@ -44,16 +44,16 @@ public class StartApp {
 	public static void main(String[] args)throws Exception {
 
 		logger.info("#########Starting Main Application...#############");
-		ClusterManager clusterManager = new HazelcastClusterManager();
+		//ClusterManager clusterManager = new HazelcastClusterManager();
 		VertxOptions options = new VertxOptions();
 		options.setClustered(true);
 		String local = InetAddress.getLocalHost().getHostAddress();
 		options.setClusterHost(local);
 	    //options.setClusterPort(8888);
 		//options.setHAGroup("local_group");
-		options.setClusterPublicHost("192.168.0.6");
-		options.setClusterPublicPort(15701);
-		options.setClusterManager(clusterManager);
+		//options.setClusterPublicHost("192.168.0.6");
+		//options.setClusterPublicPort(15701);
+		//options.setClusterManager(clusterManager);
 		
 
 		logger.debug("Event Pool Size: {}", options.getEventLoopPoolSize());
