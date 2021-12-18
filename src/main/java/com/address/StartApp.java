@@ -71,7 +71,7 @@ public class StartApp {
 				JsonObject config = vertx.getOrCreateContext().config();
 				config.put("port", port);
 				DeploymentOptions dOptions = new DeploymentOptions();
-				dOptions.setInstances(1);
+				dOptions.setInstances(8);
 				dOptions.setConfig(config);
 				vertx.deployVerticle(BasicController.class.getName(), dOptions);
 				vertx.deployVerticle(EmailWorkerVerticle.class.getName(), dOptions);
