@@ -4,6 +4,7 @@
 package com.address.controllers.routes;
 
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -30,6 +31,9 @@ public class AddressRoutes extends BasicRoutes {
 	private static final String ADDRESS_NAME_FIELD = "addressName";
 
 	private static final String EMAIL_FIELD = "email";
+	
+	private static final AtomicInteger counter = new AtomicInteger();
+	
 
 	
 	public static final Logger logger = LogManager.getLogger(AddressRoutes.class);
@@ -88,7 +92,6 @@ public class AddressRoutes extends BasicRoutes {
 				response.putHeader(CONTENT_TYPE, APPLICATION_JSON);
 				logRequest(request);
 				String email = request.getParam(EMAIL_FIELD);
-
 				request.bodyHandler(bodyHandler -> {
 					AddressEntity address = new AddressEntity();
 					address.setEmail(email);
@@ -137,10 +140,11 @@ public class AddressRoutes extends BasicRoutes {
 				HttpServerResponse response = requestHandler.response();
 				response.putHeader(CONTENT_TYPE, APPLICATION_JSON);
 				super.logRequest(request);
+				counter.incrementAndGet();
 				request.bodyHandler(bodyHandler -> {
 					Buffer buffer = bodyHandler.copy();
 					String bodyJson = buffer.toString();
-					logger.debug("Incoming Address Data:{}", bodyJson);
+				//	logger.debug("Incoming Address Data:{}", bodyJson);
 					AddressEntity address = new AddressEntity();
 
 					address = address.fromJson(bodyJson);

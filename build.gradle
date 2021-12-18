@@ -21,9 +21,9 @@ repositories {
 }
 
 dependencies {
-    compile group: 'commons-collections', name: 'commons-collections', version: '3.2'
-    compile group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.7'
-  	compile group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.7'
+    compile 'commons-collections:commons-collections:3.2'
+    compile 'org.apache.logging.log4j:log4j-api:2.7'
+  	compile 'org.apache.logging.log4j:log4j-core:2.7'
   	compile 'io.vertx:vertx-web:3.3.3'
   	compile 'io.vertx:vertx-hazelcast:3.3.3'
   	compile 'org.apache.commons:commons-pool2:2.0'

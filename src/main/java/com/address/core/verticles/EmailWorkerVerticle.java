@@ -25,7 +25,6 @@ public class EmailWorkerVerticle extends BaseVerticle{
 		vertx.eventBus().consumer("email", handler->{
 		String address = handler.address();
 		Object message = handler.body();
-		//TODO construct the email and send it to SMTP.
 		logger.debug("Message received from {} and message {}.",address,message);
 		handler.reply("Email sending is in progress...");
 	
@@ -40,7 +39,6 @@ public class EmailWorkerVerticle extends BaseVerticle{
 	
 	@Override
 	public void stop(Future<Void> stopFuture) throws Exception {
-		// TODO Auto-generated method stub
 		super.stop(stopFuture);
 		stopFuture.succeeded();
 		stopFuture.complete();

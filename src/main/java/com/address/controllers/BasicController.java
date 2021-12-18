@@ -38,7 +38,6 @@ public class BasicController extends BaseVerticle {
 	 * 
 	 */
 	public BasicController() {
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
@@ -47,7 +46,7 @@ public class BasicController extends BaseVerticle {
 		super.init(vertx, context);
 
 		// 1. deploy email verticle
-		deployEmailVerticle(vertx);
+		// deployEmailVerticle(vertx);
 
 	}
 
@@ -56,9 +55,9 @@ public class BasicController extends BaseVerticle {
 	 */
 	private void deployEmailVerticle(Vertx vertx) {
 		DeploymentOptions dOptions = new DeploymentOptions();
-		dOptions.setWorker(true);
-		dOptions.setInstances(10);
-		vertx.deployVerticle(EmailWorkerVerticle.class.getName(),dOptions, new Handler<AsyncResult<String>>() {
+		dOptions.setWorker(false);
+		dOptions.setInstances(1);
+		vertx.deployVerticle(EmailWorkerVerticle.class.getName(), dOptions, new Handler<AsyncResult<String>>() {
 
 			@Override
 			public void handle(AsyncResult<String> arg0) {
@@ -74,45 +73,45 @@ public class BasicController extends BaseVerticle {
 	 */
 	@Override
 	public void start() throws Exception {
-
 		HttpServerOptions sOptions = new HttpServerOptions();
 		sOptions.setLogActivity(true);
-		//sOptions.setSsl(true);
+		// sOptions.setSsl(true);
 		sOptions.addEnabledSecureTransportProtocol("https");
-		
+
 		HttpServer server = vertx.createHttpServer(sOptions);
 		Router router = Router.router(vertx);
 
 		int port = config().getInteger("port");
-		logger.debug("Initializing the server on {}", port);
+		// logger.debug("Initializing the server on {}", port);
 		// Add Address routes
-		AddressRoutes addressRoutes = new AddressRoutes(router,vertx);
+		AddressRoutes addressRoutes = new AddressRoutes(router, vertx);
 		addressRoutes.startRoutes();
 
 		// profile routes
 		ProfileRoutes profileRoutes = new ProfileRoutes(router);
 		profileRoutes.startRoutes();
-		
+
 		// test scenarios
 		TestScenarios testScenarios = new TestScenarios(router, vertx);
 		testScenarios.startRoutes();
 
 		server.requestHandler(router::accept).listen(port, messae -> {
-			logger.debug("Server started on {}...", port);
+			// logger.debug("Server started on {}...", port);
 			List<Route> listOfRoutes = router.getRoutes();
-			logger.debug("##############Total Routes in the system ###############");
+			// logger.debug("##############Total Routes in the system ###############");
 			for (Route route : listOfRoutes) {
-				logger.debug(route.getPath());
+				// logger.debug(route.getPath());
 			}
-			logger.debug("Event bus details ....");
-			EventBus eventBus= vertx.eventBus();
+			// logger.debug("Event bus details ....");
+			EventBus eventBus = vertx.eventBus();
 			// event bus interceptor
-			eventBus.addInterceptor(interceptor->{
-				logger.debug("Intercepting Event Bus &&&&&&&&&&&&&&&&&&&");
-				logger.debug("Message:"+interceptor.message());
-			
-			});
-		vertx.isMetricsEnabled();
+			/*
+			 * eventBus.addInterceptor(interceptor -> {
+			 * logger.debug("Message address:{} and message {}",
+			 * interceptor.message().address(), interceptor.message().body());
+			 * 
+			 * });
+			 */			vertx.isMetricsEnabled();
 		});
 
 	}

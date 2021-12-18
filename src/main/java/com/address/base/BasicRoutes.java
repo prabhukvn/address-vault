@@ -20,7 +20,7 @@ import io.vertx.ext.web.Router;
  */
 public class BasicRoutes {
 	
-	/** The logger. */
+	/** The //logger. */
 	public final Logger logger = LogManager.getLogger(this.getClass());
 	
 	/** The Constant CONTENT_TYPE. */
@@ -49,7 +49,7 @@ public class BasicRoutes {
 	 */
 	public void logRequest(HttpServerRequest request) {
 
-		logger.debug("Request URI {}.",request.absoluteURI());
+		//logger.debug("Request URI {}.",request.absoluteURI());
 		// for headers
 		MultiMap headers = request.headers();
 		StringBuilder headerList = new StringBuilder();
@@ -57,7 +57,7 @@ public class BasicRoutes {
 			headerList.append(key+"="+headers.get(key));
 			headerList.append("\n");
 		}
-		logger.debug("Headers:{}\n",headerList);
+		//logger.debug("Headers:{}\n",headerList);
 		
 		// form attributes
 		MultiMap formAttributes = request.formAttributes();
@@ -66,7 +66,7 @@ public class BasicRoutes {
 			attributes.append(attributeName+"="+formAttributes.get(attributeName));
 			attributes.append("\n");
 		}
-		logger.debug("Form Attributes:{}\n",attributes);
+		//logger.debug("Form Attributes:{}\n",attributes);
 
 		//Form Parameters
 		MultiMap params = request.params();
@@ -75,7 +75,7 @@ public class BasicRoutes {
 			paramList.append(param+"="+params.get(param));
 			paramList.append("\n");
 		}
-		logger.debug("Params:{}\n",paramList);
+		//logger.debug("Params:{}\n",paramList);
 		
 		
 	
@@ -89,7 +89,7 @@ public class BasicRoutes {
 	 */
 	public void logBody(Buffer incomingJson) {
 		// TODO Auto-generated method stub
-		logger.debug("Request Body: \n {}",incomingJson);
+		//logger.debug("Request Body: \n {}",incomingJson);
 		
 	}
 
