@@ -4,6 +4,7 @@
 package com.address.controllers;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -33,6 +34,7 @@ public class BasicController extends BaseVerticle {
 
 	public static final Logger logger = LogManager.getLogger(BasicController.class);
 	private String emailVerticleDeploymentId = null;
+	private AtomicInteger counter = new AtomicInteger(0);
 
 	/**
 	 * 
@@ -46,7 +48,7 @@ public class BasicController extends BaseVerticle {
 		super.init(vertx, context);
 
 		// 1. deploy email verticle
-		// deployEmailVerticle(vertx);
+		deployEmailVerticle(vertx);
 
 	}
 
@@ -105,13 +107,16 @@ public class BasicController extends BaseVerticle {
 			// logger.debug("Event bus details ....");
 			EventBus eventBus = vertx.eventBus();
 			// event bus interceptor
-			/*
-			 * eventBus.addInterceptor(interceptor -> {
-			 * logger.debug("Message address:{} and message {}",
-			 * interceptor.message().address(), interceptor.message().body());
-			 * 
-			 * });
-			 */			vertx.isMetricsEnabled();
+
+			eventBus.addInterceptor(interceptor -> {
+				/*
+				 * logger.debug("Message address:{} and message {}",
+				 * interceptor.message().address(), interceptor.message().body());
+				 */				
+				counter.incrementAndGet();
+				logger.info("---- Request Count {} ----",counter.get());
+			});
+			vertx.isMetricsEnabled();
 		});
 
 	}
