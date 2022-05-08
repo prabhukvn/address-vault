@@ -3,7 +3,13 @@
  */
 package com.address;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.net.InetAddress;
+import java.net.URL;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -44,16 +50,20 @@ public class StartApp {
 	public static void main(String[] args)throws Exception {
 
 		logger.info("#########Starting Main Application...#############");
-		//ClusterManager clusterManager = new HazelcastClusterManager();
+		ClassLoader classLoader = StartApp.class.getClassLoader();
+        URL resource = classLoader.getResource("hazelcast.xml");
+		File f = new File(resource.toURI());
+		Config fconfig = new Config().setConfigurationFile(f);
+		fconfig.getNetworkConfig().setPublicAddress("192.168.0.108");
+		fconfig.getNetworkConfig().getJoin().getMulticastConfig().isEnabled();
+		fconfig.getNetworkConfig().getJoin().getMulticastConfig().setMulticastGroup("224.2.2.3");
+		fconfig.getNetworkConfig().getJoin().getMulticastConfig().setMulticastPort(54327);
+		ClusterManager clusterManager = new HazelcastClusterManager(fconfig);
+		
 		VertxOptions options = new VertxOptions();
 		options.setClustered(true);
-		String local = InetAddress.getLocalHost().getHostAddress();
-		options.setClusterHost(local);
-	    //options.setClusterPort(8888);
-		//options.setHAGroup("local_group");
-		//options.setClusterPublicHost("192.168.0.6");
-		//options.setClusterPublicPort(15701);
-		//options.setClusterManager(clusterManager);
+		
+		options.setClusterManager(clusterManager);
 		
 
 		logger.debug("Event Pool Size: {}", options.getEventLoopPoolSize());

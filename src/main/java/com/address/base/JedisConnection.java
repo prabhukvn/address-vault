@@ -22,7 +22,7 @@ public class JedisConnection implements BaseConnection<Jedis> {
 	 */
 	private static Jedis jedisConnection = null;
 
-	private static String hostName = "localhost";
+	private static String hostName = "prabhukvn-HP";
 	private static JedisPool jedisPool = null;
 	private static int port = 6379;
 
