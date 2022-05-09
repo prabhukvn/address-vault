@@ -3,7 +3,8 @@
  */
 package com.address;
 
-import java.net.InetAddress;
+import java.io.File;
+import java.net.URL;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -41,24 +42,30 @@ public class StartApp {
 	 *
 	 * @param args the arguments
 	 */
-	public static void main(String[] args)throws Exception {
+	public static void main(String[] args) throws Exception {
 
 		logger.info("#########Starting Main Application...#############");
-		//ClusterManager clusterManager = new HazelcastClusterManager();
+
+		ClassLoader classLoader = StartApp.class.getClassLoader();
+		URL resource = classLoader.getResource("hazelcast.xml");
+		File f = new File(resource.toURI());
+		Config fconfig = new Config().setConfigurationFile(f);
+		fconfig.getNetworkConfig().setPublicAddress("192.168.0.106");
+		fconfig.getNetworkConfig().getJoin().getMulticastConfig().setEnabled(false);
+		fconfig.getNetworkConfig().getJoin().getTcpIpConfig().setEnabled(true);
+		
+		fconfig.getNetworkConfig().getJoin().getTcpIpConfig().getMembers().add("192.168.0.108");
+		//fconfig.getNetworkConfig().getJoin().getMulticastConfig().setMulticastGroup("224.2.2.3");
+		//fconfig.getNetworkConfig().getJoin().getMulticastConfig().setMulticastPort(54327);
+
+		ClusterManager clusterManager = new HazelcastClusterManager(fconfig);
 		VertxOptions options = new VertxOptions();
 		options.setClustered(true);
-		String local = InetAddress.getLocalHost().getHostAddress();
-		options.setClusterHost(local);
-	    //options.setClusterPort(8888);
-		//options.setHAGroup("local_group");
-		//options.setClusterPublicHost("192.168.0.6");
-		//options.setClusterPublicPort(15701);
-		//options.setClusterManager(clusterManager);
-		
+
+		options.setClusterManager(clusterManager);
 
 		logger.debug("Event Pool Size: {}", options.getEventLoopPoolSize());
 		logger.debug("Worker Thread Pool Size:{}", options.getWorkerPoolSize());
-	
 
 		Vertx.clusteredVertx(options, cluster -> {
 			try {
@@ -77,7 +84,7 @@ public class StartApp {
 				vertx.deployVerticle(EmailWorkerVerticle.class.getName(), dOptions);
 
 			} catch (Exception e) {
-				logger.error("Starting problem...",e);
+				logger.error("Starting problem...", e);
 			}
 		});
 
