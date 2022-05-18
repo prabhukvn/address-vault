@@ -3,16 +3,7 @@
  */
 package com.address;
 
-<<<<<<< HEAD
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.net.InetAddress;
-=======
-import java.io.File;
->>>>>>> e098e6a5d2fa93cb727bfb78724ac2b66400a8af
 import java.net.URL;
 
 import org.apache.logging.log4j.LogManager;
