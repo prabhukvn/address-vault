@@ -47,28 +47,29 @@ public class StartApp {
 	 *
 	 * @param args the arguments
 	 */
-	public static void main(String[] args)throws Exception {
+	public static void main(String[] args) throws Exception {
 
 		logger.info("#########Starting Main Application...#############");
+
 		ClassLoader classLoader = StartApp.class.getClassLoader();
-        URL resource = classLoader.getResource("hazelcast.xml");
+		URL resource = classLoader.getResource("hazelcast.xml");
 		File f = new File(resource.toURI());
 		Config fconfig = new Config().setConfigurationFile(f);
-		fconfig.getNetworkConfig().setPublicAddress("192.168.0.108");
-		fconfig.getNetworkConfig().getJoin().getMulticastConfig().isEnabled();
-		fconfig.getNetworkConfig().getJoin().getMulticastConfig().setMulticastGroup("224.2.2.3");
-		fconfig.getNetworkConfig().getJoin().getMulticastConfig().setMulticastPort(54327);
+		//fconfig.getNetworkConfig().setPublicAddress("192.168.0.108");
+		//fconfig.getNetworkConfig().getJoin().getMulticastConfig().setEnabled(false);
+		//fconfig.getNetworkConfig().getJoin().getTcpIpConfig().setEnabled(true);
+		//fconfig.getNetworkConfig().getJoin().getTcpIpConfig().getMembers().add("192.168.0.106");
+		//fconfig.getNetworkConfig().getJoin().getMulticastConfig().setMulticastGroup("224.2.2.3");
+		//fconfig.getNetworkConfig().getJoin().getMulticastConfig().setMulticastPort(54327);
 		ClusterManager clusterManager = new HazelcastClusterManager(fconfig);
-		
+
 		VertxOptions options = new VertxOptions();
 		options.setClustered(true);
-		
+
 		options.setClusterManager(clusterManager);
-		
 
 		logger.debug("Event Pool Size: {}", options.getEventLoopPoolSize());
 		logger.debug("Worker Thread Pool Size:{}", options.getWorkerPoolSize());
-	
 
 		Vertx.clusteredVertx(options, cluster -> {
 			try {
@@ -87,7 +88,7 @@ public class StartApp {
 				vertx.deployVerticle(EmailWorkerVerticle.class.getName(), dOptions);
 
 			} catch (Exception e) {
-				logger.error("Starting problem...",e);
+				logger.error("Starting problem...", e);
 			}
 		});
 
