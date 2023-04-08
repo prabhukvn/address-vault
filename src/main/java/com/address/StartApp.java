@@ -3,15 +3,22 @@
  */
 package com.address;
 
+import java.io.File;
+import java.net.URL;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.address.controllers.BasicController;
+import com.address.core.verticles.EmailWorkerVerticle;
+import com.hazelcast.config.Config;
 
 import io.vertx.core.DeploymentOptions;
 import io.vertx.core.Vertx;
 import io.vertx.core.VertxOptions;
 import io.vertx.core.json.JsonObject;
+import io.vertx.core.spi.cluster.ClusterManager;
+import io.vertx.spi.cluster.hazelcast.HazelcastClusterManager;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -35,33 +42,47 @@ public class StartApp {
 	 *
 	 * @param args the arguments
 	 */
-	public static void main(String[] args) {
+	public static void main(String[] args) throws Exception {
 
 		logger.info("#########Starting Main Application...#############");
+
+		ClassLoader classLoader = StartApp.class.getClassLoader();
+		URL resource = classLoader.getResource("hazelcast.xml");
+		File f = new File(resource.toURI());
+		Config fconfig = new Config().setConfigurationFile(f);
+		//fconfig.getNetworkConfig().setPublicAddress("192.168.0.108");
+		//fconfig.getNetworkConfig().getJoin().getMulticastConfig().setEnabled(false);
+		//fconfig.getNetworkConfig().getJoin().getTcpIpConfig().setEnabled(true);
+		//fconfig.getNetworkConfig().getJoin().getTcpIpConfig().getMembers().add("192.168.0.106");
+		//fconfig.getNetworkConfig().getJoin().getMulticastConfig().setMulticastGroup("224.2.2.3");
+		//fconfig.getNetworkConfig().getJoin().getMulticastConfig().setMulticastPort(54327);
+		ClusterManager clusterManager = new HazelcastClusterManager(fconfig);
 		VertxOptions options = new VertxOptions();
 		options.setClustered(true);
 
+		options.setClusterManager(clusterManager);
+
 		logger.debug("Event Pool Size: {}", options.getEventLoopPoolSize());
 		logger.debug("Worker Thread Pool Size:{}", options.getWorkerPoolSize());
-	
 
-		Vertx.clusteredVertx(options, resultHandler -> {
+		Vertx.clusteredVertx(options, cluster -> {
 			try {
 
 				int port = 8999;
 				if (args != null && args.length > 0) {
 					port = Integer.parseInt(args[0]);
 				}
-				JsonObject config = Vertx.factory.vertx().getOrCreateContext().config();
+				Vertx vertx = cluster.result();
+				JsonObject config = vertx.getOrCreateContext().config();
 				config.put("port", port);
 				DeploymentOptions dOptions = new DeploymentOptions();
-				dOptions.setInstances(1);
+				dOptions.setInstances(8);
 				dOptions.setConfig(config);
-				dOptions.setHa(true);
-				Vertx.factory.vertx().deployVerticle(BasicController.class.getName(), dOptions);
+				vertx.deployVerticle(BasicController.class.getName(), dOptions);
+				vertx.deployVerticle(EmailWorkerVerticle.class.getName(), dOptions);
 
 			} catch (Exception e) {
-				logger.error("Starting problem...",e);
+				logger.error("Starting problem...", e);
 			}
 		});
 

@@ -31,7 +31,6 @@ public class AddressManager {
 	 * 
 	 */
 	public AddressManager() {
-		// TODO Auto-generated constructor stub
 	}
 
 	public boolean addAddress(AddressEntity address, Vertx vertx) {
@@ -50,8 +49,9 @@ public class AddressManager {
 					records+=record;
 				}
 				logger.debug("Number of records updated {}",records);
+				logger.debug("sending message to {}",addressEntity.getEmail());
 				// trigger the email
-				vertx.eventBus().send("email",addressEntity.toJson() );
+				vertx.eventBus().send("email",addressEntity.getEmail() );
 				status= true;
 			}else {
 				logger.debug("Address not updated for {}.",key);
